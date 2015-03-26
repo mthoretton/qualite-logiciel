@@ -1,0 +1,12 @@
+model DroneModel
+
+class Entrepot end
+
+class Commande end
+
+class Receptacle end
+
+class Drone end
+
+class Noeud end
+
