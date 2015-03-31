@@ -1,4 +1,8 @@
 reset
 open model.use
-!create m:Manager
-!m.doHop()
+
+-- gen flags +d
+gen start genWorld.assl genWorld(0,0,10)
+gen result accept
+
+check

@@ -30,3 +30,16 @@ class Manager
 				hop -> hop {doHop()}
 		end
 end
+
+/* ----- Associations */
+
+association Neighbours between
+	Noeud[1] role main;
+	Noeud[1..4] role neighbours;
+end
+
+/* ----- Constraints */
+constraints
+
+context Noeud inv notOwnNeigh:
+	self.neighbours->excludes(self)

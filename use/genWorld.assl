@@ -1,0 +1,9 @@
+procedure genWorld(dnb : Integer, rnb: Integer, nnb:Integer)
+var noeuds:Sequence(Noeud),
+	nbNoeuds : Integer;
+
+begin
+	nbNoeuds := Try([Sequence{5..nnb}]);
+	noeuds := CreateN(Noeud, [nbNoeuds]);
+	Try(Neighbours, [noeuds], [noeuds]);
+end;
