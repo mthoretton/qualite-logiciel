@@ -1,2 +1,4 @@
 reset
 open model.use
+!create m:Manager
+!m.doHop()
