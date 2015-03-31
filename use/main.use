@@ -2,7 +2,5 @@ reset
 open model.use
 
 -- gen flags +d
-gen start genWorld.assl genWorld(0,0,10)
-gen result accept
-
-check
+-- gen start genWorld.assl genWorld(0,0,10)
+-- gen result accept

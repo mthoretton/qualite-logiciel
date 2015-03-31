@@ -13,7 +13,7 @@ class Entrepot < Noeud end
 class Manager
 
 	operations
-		doHop()
+		doHop(droneSet : Set(Drone))
 		begin
 			/* Algorithme sequentiel */
 		end
@@ -43,3 +43,8 @@ constraints
 
 context Noeud inv notOwnNeigh:
 	self.neighbours->excludes(self)
+
+-- M
+
+-- L
+
