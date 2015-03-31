@@ -2,7 +2,31 @@ model DroneModel
 
 class Commande end
 
-class Drone end
+class Drone
+	attributes
+		cap : Integer init = 10
+		path : Set(Noeud)
+		current : Noeud
+		energy : Integer
+		command : Commande
+	operations
+		recharger()
+		begin
+
+		end
+		deplacer()
+		begin
+			
+		end
+		livrer()
+		begin
+			
+		end
+		attendre()
+		begin
+			
+		end
+end
 
 class Noeud end
 
