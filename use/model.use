@@ -3,6 +3,7 @@ model DroneModel
 class Commande
 	attributes
 		load:Integer init = 10;
+		livree:Boolean init = false;
 end
 
 class Drone
@@ -22,6 +23,8 @@ class Drone
 		livrer():Integer
 		begin
 			(self.noeud.oclAsType(Receptacle)).livrer(self.commande);
+			self.commande.livree :=true;
+			delete (self,self.commande) from DroneHasCommande;
 			result := 1;
 		end
 		attendre()
@@ -31,8 +34,6 @@ class Drone
 end
 
 class Noeud
-	attributes
-		drone:Drone
 end
 
 class Receptacle < Noeud
