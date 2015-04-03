@@ -1,6 +1,9 @@
 model DroneModel
 
-class Commande end
+class Commande
+	attributes
+		load:Integer init = 10;
+end
 
 class Drone
 	attributes
@@ -28,9 +31,24 @@ class Drone
 		end
 end
 
-class Noeud end
+class Noeud
+	attributes
+		drone:Drone
+end
 
-class Receptacle < Noeud end
+class Receptacle < Noeud
+	attributes
+		cap:Integer init = 100;
+		load:Integer init = 0;
+	operations
+		livrer(co:Commande)
+		begin
+			if self.load + co.load < self.cap
+	        then
+	            --self.load = self.load + co.load;
+	        end
+		end
+end
 
 class Entrepot < Noeud end
 
