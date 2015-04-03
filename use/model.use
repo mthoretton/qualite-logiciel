@@ -8,8 +8,8 @@ end
 
 class Drone
 	attributes
-		cap : Integer init = 10
-		path : OrderedSet(Noeud)
+		cap : Integer init = 10;
+		path : OrderedSet(Noeud);
 		energy : Integer init = 3;
 		currentIdx : Integer;
 	operations
@@ -30,6 +30,7 @@ class Drone
 		begin
 			(self.noeud.oclAsType(Receptacle)).livrer(self.commande);
 			self.commande.livree :=true;
+			insert ((self.noeud.oclAsType(Receptacle)),self.commande) into ReceptacleHasCommand;
 			delete (self,self.commande) from DroneHasCommande;
 			result := 1;
 		end
@@ -43,6 +44,7 @@ class Drone
 			self.currentIdx := 1;
 			insert (self,p->at(self.currentIdx)) into DroneOnSpot;
 		end
+
 end
 
 class Noeud
@@ -98,6 +100,11 @@ end
 association Neighbours between
 	Noeud[1] role main;
 	Noeud[1..4] role neighbours;
+end
+
+association ReceptacleHasCommand between
+	Receptacle[1];
+	Commande[1];
 end
 
 /* ----- Constraints */
