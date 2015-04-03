@@ -28,9 +28,16 @@ class Drone
 		end
 end
 
-class Noeud end
+class Noeud
+	drone:Drone
+end
 
-class Receptacle < Noeud end
+class Receptacle < Noeud
+	cap:Integer init = 100
+	load:Integer init = 0;
+
+	
+end
 
 class Entrepot < Noeud end
 
