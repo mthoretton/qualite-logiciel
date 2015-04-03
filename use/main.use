@@ -17,6 +17,8 @@ open model.use
 !insert (n1,n3) into Neighbours
 !insert (n3,r1) into Neighbours
 
+--!set d1.path:=OrderedSet{n1,n2,r1}
+!d1.initPath(OrderedSet{n1,n2,r1})
 !insert (d1,c1) into DroneHasCommande;
-!insert (d1,r1) into DroneOnSpot;
+--!insert (d1,r1) into DroneOnSpot;
 --!d1.livrer()

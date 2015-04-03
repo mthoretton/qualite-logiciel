@@ -9,8 +9,9 @@ end
 class Drone
 	attributes
 		cap : Integer init = 10
-		path : Set(Noeud)
+		path : OrderedSet(Noeud)
 		energy : Integer init = 3;
+		currentIdx : Integer;
 	operations
 		recharger(): Integer
 		begin
@@ -31,6 +32,12 @@ class Drone
 		attendre()
 		begin
 			
+		end
+		initPath(p:OrderedSet(Noeud))
+		begin
+			self.path:=p;
+			self.currentIdx := 1;
+			insert (self,p->at(1)) into DroneOnSpot;
 		end
 end
 
