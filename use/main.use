@@ -4,3 +4,9 @@ open model.use
 -- gen flags +d
 -- gen start genWorld.assl genWorld(0,0,10)
 -- gen result accept
+!create d1:Drone
+!create c1:Commande
+!create r1:Receptacle
+!insert (d1,c1) into DroneHasCommande;
+!insert (d1,r1) into DroneOnSpot;
+!d1.livrer()

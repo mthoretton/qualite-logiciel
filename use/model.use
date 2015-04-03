@@ -9,9 +9,7 @@ class Drone
 	attributes
 		cap : Integer init = 10
 		path : Set(Noeud)
-		current : Noeud
 		energy : Integer
-		command : Commande
 	operations
 		recharger()
 		begin
@@ -21,9 +19,10 @@ class Drone
 		begin
 			
 		end
-		livrer()
+		livrer():Integer
 		begin
-			
+			(self.noeud.oclAsType(Receptacle)).livrer(self.commande);
+			result := 1;
 		end
 		attendre()
 		begin
@@ -41,12 +40,10 @@ class Receptacle < Noeud
 		cap:Integer init = 100;
 		load:Integer init = 0;
 	operations
-		livrer(co:Commande)
+		livrer(co:Commande):Integer
 		begin
-			if self.load + co.load < self.cap
-	        then
-	            --self.load = self.load + co.load;
-	        end
+			self.load := self.load + co.load;
+			result:=self.load;
 		end
 end
 
@@ -75,6 +72,16 @@ end
 
 /* ----- Associations */
 
+association DroneOnSpot between
+	Drone[1] role drone;
+	Noeud[1] role noeud;
+end
+
+association DroneHasCommande between
+	Drone[1] role drone;
+	Commande[1] role commande;
+end
+
 association Neighbours between
 	Noeud[1] role main;
 	Noeud[1..4] role neighbours;
@@ -90,3 +97,11 @@ context Noeud inv notOwnNeigh:
 
 -- L
 
+context Receptacle::livrer(co:Commande) : Integer
+	pre: self.load + co.load < self.cap
+	post: self.load = self.load@pre + co.load
+		and result = self.load
+
+context Drone::livrer(): Integer
+	pre: self.noeud.oclIsTypeOf(Receptacle)
+	post: result = 1
