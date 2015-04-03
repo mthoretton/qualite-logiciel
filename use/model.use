@@ -18,9 +18,13 @@ class Drone
 			self.energy := self.energy + 1;
 			result := 1;
 		end
-		deplacer()
+		deplacer() : Integer
 		begin
-			
+			self.energy := self.energy - 1;
+			self.currentIdx := self.currentIdx + 1;
+			delete (self,self.noeud) from DroneOnSpot;
+			insert (self,self.path->at(self.currentIdx)) into DroneOnSpot;
+			result :=1;
 		end
 		livrer():Integer
 		begin
@@ -37,7 +41,7 @@ class Drone
 		begin
 			self.path:=p;
 			self.currentIdx := 1;
-			insert (self,p->at(1)) into DroneOnSpot;
+			insert (self,p->at(self.currentIdx)) into DroneOnSpot;
 		end
 end
 
@@ -210,3 +214,9 @@ context Drone::recharger(): Integer
 	pre: self.noeud.oclIsTypeOf(Receptacle)
 		and self.energy < 3
 	post: self.energy = self.energy@pre +1
+
+context Drone::deplacer(): Integer
+	pre: self.currentIdx < self.path->size()
+		and self.energy > 0
+	post: self.currentIdx > self.currentIdx@pre
+		and self.energy = self.energy@pre -1
