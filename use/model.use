@@ -10,11 +10,12 @@ class Drone
 	attributes
 		cap : Integer init = 10
 		path : Set(Noeud)
-		energy : Integer
+		energy : Integer init = 3;
 	operations
-		recharger()
+		recharger(): Integer
 		begin
-
+			self.energy := self.energy + 1;
+			result := 1;
 		end
 		deplacer()
 		begin
@@ -197,3 +198,8 @@ context Receptacle::livrer(co:Commande) : Integer
 context Drone::livrer(): Integer
 	pre: self.noeud.oclIsTypeOf(Receptacle)
 	post: result = 1
+
+context Drone::recharger(): Integer
+	pre: self.noeud.oclIsTypeOf(Receptacle)
+		and self.energy < 3
+	post: self.energy = self.energy@pre +1
