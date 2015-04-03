@@ -1,5 +1,10 @@
 model DroneModel
 
+class Constant
+	attributes
+		DCAP:Integer init = 10;
+end
+
 class Commande
 	attributes
 		load:Integer init = 10;
@@ -82,23 +87,19 @@ end
 
 /* ----- Constraints */
 constraints
-
-context Noeud inv notOwnNeigh:
-	self.neighbours->excludes(self)
-
--- M
 -- Il faut toujours pouvoir sortir d’un réceptacle → Interdire 4 drones encerclant un réceptale déjà occupé (blocage sinon)
 context Noeud inv notFullNeigh:
-	self.neighbours->size < 4
-
+	self.neighbours->size() < 0
+	--self.neighbours->forAll()
+	--at(1).isEmpty() -- ->isEmpty -- ors self.neighbours[2].isEmpty
 -- Toutes les commandes ont une capacité plus petite que DCAP
-
-
+-- context Commande inv commandCapaMax:
+--	self.load < Constant.DCAP;
 -- Un noeud n’est pas son propre voisin
-
-
+context Noeud inv notOwnNeigh:
+	self.neighbours->excludes(self)
 -- DCAP < RCAP
-
+--	$todo$
 
 -- Il ya DNB drones et RNB réceptacles
 
@@ -107,9 +108,6 @@ context Noeud inv notFullNeigh:
 
 
 -- Une commande identifie un ensemble de produits et un réceptacle
-
-
--- Les commandes sont gérées au niveau de l’entrepôt qui les reçoit par internet
 
 
 -- Les produits d’une commande doivent être livrés par un drone depuis l’entrepôt jusqu’au réceptacle.
@@ -125,9 +123,6 @@ context Noeud inv notFullNeigh:
 
 
 -- Un drone peut recharger sa batterie au niveau de l’entrepôt.
-
-
--- Un réceptacle permet aussi à un drone de recharger sa batterie.
 
 
 -- A un moment donné, au plus un drone peut interagir avec un réceptacle.
@@ -176,8 +171,3 @@ context Noeud inv notFullNeigh:
 
 
 -- l’optimisation de l’énergie prime sur celle du temps...mais il faut assurer le progrès.
-
-
-
--- L
-

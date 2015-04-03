@@ -1,6 +1,11 @@
 reset
 open model.use
 
+!create n1:Noeud
+!create n2:Noeud
+!insert(n1,n2) into Neighbours
+
+
 -- gen flags +d
 -- gen start genWorld.assl genWorld(0,0,10)
 -- gen result accept
