@@ -94,6 +94,97 @@ context Noeud inv notOwnNeigh:
 	self.neighbours->excludes(self)
 
 -- M
+-- Il faut toujours pouvoir sortir d’un réceptacle → Interdire 4 drones encerclant un réceptale déjà occupé (blocage sinon)
+context Noeud inv notFullNeigh:
+	self.neighbours->size < 4
+
+-- Toutes les commandes ont une capacité plus petite que DCAP
+
+
+-- Un noeud n’est pas son propre voisin
+
+
+-- DCAP < RCAP
+
+
+-- Il ya DNB drones et RNB réceptacles
+
+
+-- Un réceptacle est un conteneur de capacité RCAP
+
+
+-- Une commande identifie un ensemble de produits et un réceptacle
+
+
+-- Les commandes sont gérées au niveau de l’entrepôt qui les reçoit par internet
+
+
+-- Les produits d’une commande doivent être livrés par un drone depuis l’entrepôt jusqu’au réceptacle.
+
+
+-- Un drone a une capacitéDCAP (unité entière).
+
+
+-- Un drone interagit avec un réceptacle pour y déposer les produits qu’il porte.
+
+
+-- Après avoir livré sa commande, un drone rejoint l’entrepôt.
+
+
+-- Un drone peut recharger sa batterie au niveau de l’entrepôt.
+
+
+-- Un réceptacle permet aussi à un drone de recharger sa batterie.
+
+
+-- A un moment donné, au plus un drone peut interagir avec un réceptacle.
+
+
+-- On considère que l’entrepôt et les réceptacles sont situés sur une grille orthogonale régulière.
+
+
+-- Il existe au moins un réceptacle voisin de l’entrepôt.
+
+
+-- Pour chaque réceptacle, il existe un chemin partant de l’entrepôt et menant à ce réceptacle en passant par un ensemble d’autres réceptacles tel que 
+
+
+-- la distance entre tout couple d’éléments consécutifs de ce chemin soit inférieure ou égale à 2.
+
+
+-- La capacité de la batterie d’un drone est de 3 unités d’énergie.
+
+
+-- Un drone consomme 1 unité d’énergie pour faire 1 pas sur la grille.
+
+
+-- Un drone prend 1 unité de temps pour se déplacer de 1 pas sur la grille.
+
+
+-- Un drone prend 1 unité de temps pour recharger sa batterie de 1 unité d’énergie.
+
+
+-- A un moment donné, il y a au plus un drone à chaque intersection de la grille.
+
+
+-- Une fois le réceptacle rejoint, l’action de livrer les produits prend 1 unité de temps.
+
+
+-- Au niveau d’un réceptacle les actions de livrer les produits et de recharger la batterie ne peuvent pas avoir lieu en même temps.
+
+
+-- Plusieurs drones peuvent se retrouver en attente devant un même réceptacle actuellement occupé par un drone.
+
+
+-- Plusieurs drones peuvent vouloir rejoindre la même position au prochain pas temporel.
+
+
+-- Dans ce dernier cas, les drones se mettent d’accord entre eux pour déterminer qui a priorité, et
+
+
+-- l’optimisation de l’énergie prime sur celle du temps...mais il faut assurer le progrès.
+
+
 
 -- L
 
