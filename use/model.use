@@ -8,37 +8,51 @@ end
 class Commande
 	attributes
 		load:Integer init = 10;
+		livree:Boolean init = false;
 end
 
 class Drone
 	attributes
-		cap : Integer init = 10
-		path : Set(Noeud)
-		current : Noeud
-		energy : Integer
-		command : Commande
+		cap : Integer init = 10;
+		path : OrderedSet(Noeud);
+		energy : Integer init = 3;
+		currentIdx : Integer;
 	operations
-		recharger()
+		recharger(): Integer
 		begin
-
+			self.energy := self.energy + 1;
+			result := 1;
 		end
-		deplacer()
+		deplacer() : Integer
 		begin
-			
+			self.energy := self.energy - 1;
+			self.currentIdx := self.currentIdx + 1;
+			delete (self,self.noeud) from DroneOnSpot;
+			insert (self,self.path->at(self.currentIdx)) into DroneOnSpot;
+			result :=1;
 		end
-		livrer()
+		livrer():Integer
 		begin
-			
+			(self.noeud.oclAsType(Receptacle)).livrer(self.commande);
+			self.commande.livree :=true;
+			insert ((self.noeud.oclAsType(Receptacle)),self.commande) into ReceptacleHasCommand;
+			delete (self,self.commande) from DroneHasCommande;
+			result := 1;
 		end
 		attendre()
 		begin
 			
 		end
+		initPath(p:OrderedSet(Noeud))
+		begin
+			self.path:=p;
+			self.currentIdx := 1;
+			insert (self,p->at(self.currentIdx)) into DroneOnSpot;
+		end
+
 end
 
 class Noeud
-	attributes
-		drone:Drone
 end
 
 class Receptacle < Noeud
@@ -46,12 +60,10 @@ class Receptacle < Noeud
 		cap:Integer init = 100;
 		load:Integer init = 0;
 	operations
-		livrer(co:Commande)
+		livrer(co:Commande):Integer
 		begin
-			if self.load + co.load < self.cap
-	        then
-	            --self.load = self.load + co.load;
-	        end
+			self.load := self.load + co.load;
+			result:=self.load;
 		end
 end
 
@@ -80,9 +92,24 @@ end
 
 /* ----- Associations */
 
+association DroneOnSpot between
+	Drone[1] role drone;
+	Noeud[1] role noeud;
+end
+
+association DroneHasCommande between
+	Drone[1] role drone;
+	Commande[1] role commande;
+end
+
 association Neighbours between
 	Noeud[1] role main;
 	Noeud[1..4] role neighbours;
+end
+
+association ReceptacleHasCommand between
+	Receptacle[1];
+	Commande[1];
 end
 
 /* ----- Constraints */
@@ -107,28 +134,10 @@ context Noeud inv notOwnNeigh:
 -- Un réceptacle est un conteneur de capacité RCAP
 
 
--- Une commande identifie un ensemble de produits et un réceptacle
-
-
 -- Les produits d’une commande doivent être livrés par un drone depuis l’entrepôt jusqu’au réceptacle.
 
 
--- Un drone a une capacitéDCAP (unité entière).
-
-
--- Un drone interagit avec un réceptacle pour y déposer les produits qu’il porte.
-
-
--- Après avoir livré sa commande, un drone rejoint l’entrepôt.
-
-
--- Un drone peut recharger sa batterie au niveau de l’entrepôt.
-
-
 -- A un moment donné, au plus un drone peut interagir avec un réceptacle.
-
-
--- On considère que l’entrepôt et les réceptacles sont situés sur une grille orthogonale régulière.
 
 
 -- Il existe au moins un réceptacle voisin de l’entrepôt.
@@ -140,34 +149,31 @@ context Noeud inv notOwnNeigh:
 -- la distance entre tout couple d’éléments consécutifs de ce chemin soit inférieure ou égale à 2.
 
 
--- La capacité de la batterie d’un drone est de 3 unités d’énergie.
-
-
--- Un drone consomme 1 unité d’énergie pour faire 1 pas sur la grille.
-
-
--- Un drone prend 1 unité de temps pour se déplacer de 1 pas sur la grille.
-
-
--- Un drone prend 1 unité de temps pour recharger sa batterie de 1 unité d’énergie.
-
-
 -- A un moment donné, il y a au plus un drone à chaque intersection de la grille.
-
-
--- Une fois le réceptacle rejoint, l’action de livrer les produits prend 1 unité de temps.
 
 
 -- Au niveau d’un réceptacle les actions de livrer les produits et de recharger la batterie ne peuvent pas avoir lieu en même temps.
 
 
--- Plusieurs drones peuvent se retrouver en attente devant un même réceptacle actuellement occupé par un drone.
 
+-- L
 
--- Plusieurs drones peuvent vouloir rejoindre la même position au prochain pas temporel.
+context Receptacle::livrer(co:Commande) : Integer
+	pre: self.load + co.load < self.cap
+	post: self.load = self.load@pre + co.load
+		and result = self.load
 
+context Drone::livrer(): Integer
+	pre: self.noeud.oclIsTypeOf(Receptacle)
+	post: result = 1
 
--- Dans ce dernier cas, les drones se mettent d’accord entre eux pour déterminer qui a priorité, et
+context Drone::recharger(): Integer
+	pre: self.noeud.oclIsTypeOf(Receptacle)
+		and self.energy < 3
+	post: self.energy = self.energy@pre +1
 
-
--- l’optimisation de l’énergie prime sur celle du temps...mais il faut assurer le progrès.
+context Drone::deplacer(): Integer
+	pre: self.currentIdx < self.path->size()
+		and self.energy > 0
+	post: self.currentIdx > self.currentIdx@pre
+		and self.energy = self.energy@pre -1
