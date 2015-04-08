@@ -25,6 +25,7 @@ class Drone
 		energy : Integer init = 3;
 		currentIdx : Integer;
 		currentState : String init='livre';
+		lagrossevardetest : Boolean init = false;
 	operations
 		recharger(): Integer
 		begin
@@ -34,6 +35,7 @@ class Drone
 		end
 		deplacer() : Integer
 		begin
+		    self.lagrossevardetest := self.path->at(self.currentIdx).lelu(self.energy);
 			self.currentState:='deplace';
 			self.energy := self.energy - 1;
 			self.currentIdx := self.currentIdx + 1;
@@ -172,6 +174,28 @@ class Drone
 end
 
 class Noeud
+	operations
+		lelu(drone_energy : Integer):Boolean
+		begin
+			declare min_energy : Integer;
+			min_energy  := 100;
+			result:=false;
+
+			for n in self.neighbours do
+				if n.drone->notEmpty()
+				then
+					if n.drone.energy < min_energy
+					then
+						min_energy := n.drone.energy
+					end;
+				end;
+			end;
+
+			if drone_energy <= min_energy
+			then
+				result:=true;
+			end;
+		end
 end
 
 class Receptacle < Noeud
@@ -184,11 +208,6 @@ class Receptacle < Noeud
 		begin
 			self.load := self.load + co.load;
 			result:=self.load;
-		end
-		lelu():Integer
-		begin
-			result := 1;
-			result := self.neighbours[0];
 		end
 end
 
