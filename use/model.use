@@ -73,7 +73,7 @@ class Drone
 			insert (self,c) into DroneHasCommande;
 			self.initPath(c.target.path);
 		end
-		hop()
+		hop():Integer
 		begin
 			declare TR:Boolean, TDP:Boolean, TL:Boolean, toAtt:Boolean;
 
@@ -85,6 +85,7 @@ class Drone
 			TL := self.currentIdx = self.path->size();
 			-- Nothing is possible (wait)
 
+			result := 1;
 
 -- THE PYRAMID OF DOOOOOM
 
@@ -214,23 +215,13 @@ end
 class Entrepot < Noeud end
 
 class Manager
-
 	operations
-		doHop(droneSet : Set(Drone))
+		doHop()
 		begin
-			/* Algorithme sequentiel */
-		end
-
-	statemachines
-		psm Machine
-			states
-				startUp:initial
-
-				hop
-			transitions
-				startUp -> hop {create}
-
-				hop -> hop {doHop()}
+			declare d:Drone;
+			for d in Drone.allInstances() do
+				d.hop();
+			end;
 		end
 end
 
