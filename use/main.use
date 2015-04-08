@@ -12,7 +12,7 @@ open model.use
 --!create ll:OrderedSet
 --!set ll:=Set{d1,d2,d3}
 
-!create n1:Noeud
+!create n1:Entrepot
 !create n2:Noeud
 !create n3:Noeud
 !create r1:Receptacle

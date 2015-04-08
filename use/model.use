@@ -41,6 +41,12 @@ class Drone
 			self.commande.livree :=true;
 			insert ((self.noeud.oclAsType(Receptacle)),self.commande) into ReceptacleHasCommand;
 			delete (self,self.commande) from DroneHasCommande;
+
+			-- Back to the warehouse
+			delete (self,self.noeud) from DroneOnSpot;
+			self.initPath(self.path->reverse());
+
+
 			result := 1;
 		end
 		attendre()
