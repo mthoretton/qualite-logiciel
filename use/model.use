@@ -9,6 +9,7 @@ class Commande
 	attributes
 		load:Integer init = 10;
 		livree:Boolean init = false;
+		target:Receptacle;
 end
 
 class Drone
@@ -58,6 +59,11 @@ class Drone
 			self.path:=p;
 			self.currentIdx := 1;
 			insert (self,p->at(self.currentIdx)) into DroneOnSpot;
+		end
+		initCommand(c:Commande)
+		begin
+			insert (self,c) into DroneHasCommande;
+			self.initPath(c.target.path);
 		end
 		hop()
 		begin
@@ -166,6 +172,7 @@ class Receptacle < Noeud
 	attributes
 		cap:Integer init = 100;
 		load:Integer init = 0;
+		path:OrderedSet(Noeud);
 	operations
 		livrer(co:Commande):Integer
 		begin
