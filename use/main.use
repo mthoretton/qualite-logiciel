@@ -22,13 +22,5 @@ open model.use
 
 !d1.initCommand(c1)
 
---!set d1.path:=OrderedSet{n1,n2,r1}
---!d1.initPath(OrderedSet{n1,n2,r1})
---!insert (d1,c1) into DroneHasCommande;
---!insert (d1,r1) into DroneOnSpot;
---!d1.livrer()
-
 !create t1:Testing
 !set t1.var2 := r1.lelu()
-
---!list->forAll(d|d.energy:=42)
