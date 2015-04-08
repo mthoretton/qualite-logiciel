@@ -5,7 +5,12 @@ open model.use
 -- gen start genWorld.assl genWorld(0,0,10)
 -- gen result accept
 !create d1:Drone
+!create d2:Drone
+!create d3:Drone
 !create c1:Commande
+
+--!create ll:OrderedSet
+--!set ll:=Set{d1,d2,d3}
 
 !create n1:Noeud
 !create n2:Noeud
@@ -17,8 +22,12 @@ open model.use
 !insert (n1,n3) into Neighbours
 !insert (n3,r1) into Neighbours
 
+
+
 --!set d1.path:=OrderedSet{n1,n2,r1}
 !d1.initPath(OrderedSet{n1,n2,r1})
 !insert (d1,c1) into DroneHasCommande;
 --!insert (d1,r1) into DroneOnSpot;
 --!d1.livrer()
+
+--!list->forAll(d|d.energy:=42)

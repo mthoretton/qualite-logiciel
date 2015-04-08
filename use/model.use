@@ -44,7 +44,38 @@ class Drone
 			self.currentIdx := 1;
 			insert (self,p->at(self.currentIdx)) into DroneOnSpot;
 		end
+		hop()
+		begin
+			if self.oclIsInState(deplace)
+			then
+				energy:=42
+			end
+		end
 
+	statemachines
+		psm Machine
+			states
+				startUp:initial
+				deplace
+				attend
+				recharge
+				livre
+			transitions
+				startUp->deplace {create}
+
+				deplace->attend {attendre()}
+				deplace->livre {livrer()}
+				deplace->recharge {recharger()}
+				deplace->deplace {deplacer()}
+
+				recharge->deplace {deplacer()}
+				recharge->livre {livrer()}
+
+				livre->recharge {recharger()}
+				livre->deplace {deplacer()}
+
+				attend->deplace {deplacer()}
+		end
 end
 
 class Noeud
