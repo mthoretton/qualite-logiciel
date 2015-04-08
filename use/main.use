@@ -22,5 +22,8 @@ open model.use
 
 !d1.initCommand(c1)
 
-!create t1:Testing
-!set t1.var2 := r1.lelu()
+--!create t1:Testing
+--!set t1.var2 := r1.lelu()
+
+--!declare ll:Set(Drone)
+!ll := Set{d1,d2,d3}

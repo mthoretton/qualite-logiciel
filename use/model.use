@@ -188,32 +188,11 @@ class Receptacle < Noeud
 		lelu():Integer
 		begin
 			result := 1;
-			result := self.neighbours[0];
+			--result := self.neighbours[0];
 		end
 end
 
 class Entrepot < Noeud end
-
-class Manager
-
-	operations
-		doHop(droneSet : Set(Drone))
-		begin
-			/* Algorithme sequentiel */
-		end
-
-	statemachines
-		psm Machine
-			states
-				startUp:initial
-
-				hop
-			transitions
-				startUp -> hop {create}
-
-				hop -> hop {doHop()}
-		end
-end
 
 /* ----- Associations */
 
