@@ -23,14 +23,17 @@ class Drone
 		path : OrderedSet(Noeud);
 		energy : Integer init = 3;
 		currentIdx : Integer;
+		currentState : String init='livre';
 	operations
 		recharger(): Integer
 		begin
+			self.currentState:='recharge';
 			self.energy := self.energy + 1;
 			result := 1;
 		end
 		deplacer() : Integer
 		begin
+			self.currentState:='deplace';
 			self.energy := self.energy - 1;
 			self.currentIdx := self.currentIdx + 1;
 			delete (self,self.noeud) from DroneOnSpot;
@@ -39,6 +42,7 @@ class Drone
 		end
 		livrer():Integer
 		begin
+			self.currentState:='livre';
 			(self.noeud.oclAsType(Receptacle)).livrer(self.commande);
 			self.commande.livree :=true;
 			insert ((self.noeud.oclAsType(Receptacle)),self.commande) into ReceptacleHasCommand;
@@ -47,7 +51,7 @@ class Drone
 		end
 		attendre()
 		begin
-			
+			self.currentState:='attendre'
 		end
 		initPath(p:OrderedSet(Noeud))
 		begin
@@ -55,7 +59,104 @@ class Drone
 			self.currentIdx := 1;
 			insert (self,p->at(self.currentIdx)) into DroneOnSpot;
 		end
+		hop()
+		begin
+			declare TR:Boolean, TDP:Boolean, TL:Boolean, toAtt:Boolean;
 
+			-- Displacement is possible
+			TDP := self.energy > 0 and true;	-- Node ok TODO
+			-- Recharge is possible
+			TR := self.energy < 3 and self.noeud.oclIsTypeOf(Receptacle);
+			-- Shipping is possible
+			TL := self.currentIdx = self.path->size();
+			-- Nothing is possible (wait)
+
+
+-- THE PYRAMID OF DOOOOOM
+
+			if self.currentState = 'deplace'
+			--if self.oclIsInState(Drone::deplace)
+			then
+				if TR
+				then 
+					self.recharger();
+				else
+					if TL
+					then
+						self.livrer();
+					else
+						if TDP
+						then
+							self.deplacer();
+						else
+							self.attendre();
+						end
+					end
+				end
+			else
+				if self.currentState = 'livre'
+				then
+					if TR
+					then
+						self.recharger();
+					else
+						if TDP
+						then
+							self.deplacer();
+						end
+					end
+				else
+					if self.currentState = 'recharge'
+					then
+						if TR
+						then
+							self.recharger();
+						else
+							if TL
+							then
+								self.livrer();
+							else
+								if TDP
+								then
+									self.deplacer();
+								end
+							end
+						end
+					else
+						if self.currentState = 'attend' and TDP
+						then
+							self.deplacer();
+						end
+					end
+				end
+			end;
+		end
+
+	statemachines
+		psm Machine
+			states
+				startUp:initial
+				deplace
+				attend
+				recharge
+				livre
+			transitions
+				startUp->deplace {create}
+
+				deplace->attend {attendre()}
+				deplace->livre {livrer()}
+				deplace->recharge {recharger()}
+				deplace->deplace {deplacer()}
+
+				recharge->deplace {deplacer()}
+				recharge->livre {livrer()}
+				recharge->recharge {recharger()}
+
+				livre->recharge {recharger()}
+				livre->deplace {deplacer()}
+
+				attend->deplace {deplacer()}
+		end
 end
 
 class Noeud
