@@ -1,5 +1,11 @@
 model DroneModel
 
+class Testing
+	attributes
+		var1:Integer init = 10;
+		var2:Integer init = 15;
+end
+
 class Constant
 	attributes
 		DCAP:Integer init = 10;
@@ -64,6 +70,11 @@ class Receptacle < Noeud
 		begin
 			self.load := self.load + co.load;
 			result:=self.load;
+		end
+		lelu():Integer
+		begin
+			result := 1;
+			result := self.neighbours[0];
 		end
 end
 
@@ -153,7 +164,6 @@ context Noeud inv notOwnNeigh:
 
 
 -- Au niveau d’un réceptacle les actions de livrer les produits et de recharger la batterie ne peuvent pas avoir lieu en même temps.
-
 
 
 -- L
