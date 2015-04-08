@@ -1,6 +1,8 @@
 reset
 open model.use
 
+!create m:Manager
+
 !create n1:Entrepot
 !create n2:Noeud
 !create n3:Noeud
@@ -22,9 +24,4 @@ open model.use
 
 !d1.initCommand(c1)
 
---!create t1:Testing
---!set t1.var2 := r1.lelu()
-
---!declare ll:Set(Drone)
-!ll := Set{d1,d2,d3}
 
