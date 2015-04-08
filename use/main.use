@@ -10,8 +10,8 @@ open model.use
 !set r1.path:=OrderedSet{n1,n2,r1}
 
 !create d1:Drone
-!create d2:Drone
-!create d3:Drone
+--!create d2:Drone
+--!create d3:Drone
 !create c1:Commande
 !set c1.target := r1
 
@@ -27,3 +27,4 @@ open model.use
 
 --!declare ll:Set(Drone)
 !ll := Set{d1,d2,d3}
+

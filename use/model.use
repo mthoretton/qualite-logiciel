@@ -71,6 +71,14 @@ class Drone
 			insert (self,c) into DroneHasCommande;
 			self.initPath(c.target.path);
 		end
+		abababa():Integer
+		begin
+			declare d:Drone;
+			for d in Drone.allInstances() do
+				d.hop();
+			end;
+			result := 1;
+		end
 		hop()
 		begin
 			declare TR:Boolean, TDP:Boolean, TL:Boolean, toAtt:Boolean;
