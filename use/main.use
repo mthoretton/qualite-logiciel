@@ -28,4 +28,7 @@ open model.use
 --!insert (d1,r1) into DroneOnSpot;
 --!d1.livrer()
 
+!create t1:Testing
+!set t1.var2 := r1.lelu()
+
 --!list->forAll(d|d.energy:=42)
