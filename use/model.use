@@ -12,14 +12,17 @@ class Drone
 		path : OrderedSet(Noeud);
 		energy : Integer init = 3;
 		currentIdx : Integer;
+		currentState : String init='livre';
 	operations
 		recharger(): Integer
 		begin
+			self.currentState:='recharge';
 			self.energy := self.energy + 1;
 			result := 1;
 		end
 		deplacer() : Integer
 		begin
+			self.currentState:='deplace';
 			self.energy := self.energy - 1;
 			self.currentIdx := self.currentIdx + 1;
 			delete (self,self.noeud) from DroneOnSpot;
@@ -28,6 +31,7 @@ class Drone
 		end
 		livrer():Integer
 		begin
+			self.currentState:='livre';
 			(self.noeud.oclAsType(Receptacle)).livrer(self.commande);
 			self.commande.livree :=true;
 			insert ((self.noeud.oclAsType(Receptacle)),self.commande) into ReceptacleHasCommand;
@@ -36,7 +40,7 @@ class Drone
 		end
 		attendre()
 		begin
-			
+			self.currentState:='attendre'
 		end
 		initPath(p:OrderedSet(Noeud))
 		begin
@@ -46,9 +50,44 @@ class Drone
 		end
 		hop()
 		begin
-			if self.oclIsInState(deplace)
+			declare TR:Boolean, TDP:Boolean, TL:Boolean, toAtt:Boolean;
+
+			-- Displacement is possible
+			TDP := self.energy > 0 and true;	-- Node ok
+			-- Recharge is possible
+			TR := self.energy < 3 and self.noeud.oclIsTypeOf(Receptacle);
+			-- Shipping is possible
+			TL := self.currentIdx = self.path->size();
+			-- Nothing is possible (wait)
+			--toAtt := Not TDP and Not TR and Not TL;
+
+			if self.currentState = 'deplace'
+			--if self.oclIsInState(Drone::deplace)
 			then
-				energy:=42
+				
+			else
+				if self.currentState = 'livre'
+				then
+					
+				else
+					if self.currentState = 'recharge'
+					then
+						
+					else
+						if self.currentState = 'attend'
+						then
+							
+						else
+							
+						end
+					end
+				end
+			end;
+
+			TR := true or true;
+			if TR
+			then
+				self.energy:=100;
 			end
 		end
 
