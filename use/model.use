@@ -53,42 +53,72 @@ class Drone
 			declare TR:Boolean, TDP:Boolean, TL:Boolean, toAtt:Boolean;
 
 			-- Displacement is possible
-			TDP := self.energy > 0 and true;	-- Node ok
+			TDP := self.energy > 0 and true;	-- Node ok TODO
 			-- Recharge is possible
 			TR := self.energy < 3 and self.noeud.oclIsTypeOf(Receptacle);
 			-- Shipping is possible
 			TL := self.currentIdx = self.path->size();
 			-- Nothing is possible (wait)
-			--toAtt := Not TDP and Not TR and Not TL;
+
+
+-- THE PYRAMID OF DOOOOOM
 
 			if self.currentState = 'deplace'
 			--if self.oclIsInState(Drone::deplace)
 			then
-				
+				if TR
+				then 
+					self.recharger();
+				else
+					if TL
+					then
+						self.livrer();
+					else
+						if TDP
+						then
+							self.deplacer();
+						else
+							self.attendre();
+						end
+					end
+				end
 			else
 				if self.currentState = 'livre'
 				then
-					
+					if TR
+					then
+						self.recharger();
+					else
+						if TDP
+						then
+							self.deplacer();
+						end
+					end
 				else
 					if self.currentState = 'recharge'
 					then
-						
-					else
-						if self.currentState = 'attend'
+						if TR
 						then
-							
+							self.recharger();
 						else
-							
+							if TL
+							then
+								self.livrer();
+							else
+								if TDP
+								then
+									self.deplacer();
+								end
+							end
+						end
+					else
+						if self.currentState = 'attend' and TDP
+						then
+							self.deplacer();
 						end
 					end
 				end
 			end;
-
-			TR := true or true;
-			if TR
-			then
-				self.energy:=100;
-			end
 		end
 
 	statemachines
@@ -109,6 +139,7 @@ class Drone
 
 				recharge->deplace {deplacer()}
 				recharge->livre {livrer()}
+				recharge->recharge {recharger()}
 
 				livre->recharge {recharger()}
 				livre->deplace {deplacer()}
