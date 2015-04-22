@@ -8,7 +8,7 @@ end
 
 class Constant
 	attributes
-		DCAP:Integer init = 10;
+		DCAP:Integer init = 10;	--DCAP
 end
 
 class Commande
@@ -250,8 +250,8 @@ end
 /* ----- Constraints */
 constraints
 -- Il faut toujours pouvoir sortir d’un réceptacle → Interdire 4 drones encerclant un réceptale déjà occupé (blocage sinon)
-context Noeud inv notFullNeigh:
-	self.neighbours->size() < 0
+--context Noeud inv notFullNeigh:
+--	self.neighbours->size() < 0
 	--self.neighbours->forAll()
 	--at(1).isEmpty() -- ->isEmpty -- ors self.neighbours[2].isEmpty
 -- Toutes les commandes ont une capacité plus petite que DCAP
@@ -260,37 +260,40 @@ context Noeud inv notFullNeigh:
 -- Un noeud n’est pas son propre voisin
 context Noeud inv notOwnNeigh:
 	self.neighbours->excludes(self)
--- DCAP < RCAP
---	$todo$
 
--- Il ya DNB drones et RNB réceptacles
+-- Un seul entrepot
+context Entrepot inv singlet:
+	Entrepot.allInstances()->size() < 2
+
+-- La quantité d’une livraison est DCAP = capacité d’un drone (on impose que chaque commande a une capacité de DCAP - pour s’assurer que chaque commande peut être livrée par une seule drone)
+context Commande inv capa:
+	self.load = 10 -- DCAP
+
+-- Une commande à un réceptacle associé
+context Commande inv hasReceptacle:
+	self.target.oclIsUndefined() <> true
+
+-- Un drone à un réceptacle destination 
+context Drone inv hasDestination:
+	(self.path->at(self.path->size()).oclIsTypeOf(Receptacle)) or (self.path->at(self.path->size()).oclIsTypeOf(Entrepot))
+
+-- Un drone peut avoir un niveau d’energie = 0, 1, 2, 3
+context Drone inv energyIsFine:
+	self.energy >=0 and self.energy <=3
+
+-- Un drone qui a l’energie = 0 ne peut pas être sur un noeud qui n’est pas un réceptacle
+context Drone inv isOnReceptacleIfUncharger:
+	self.energy > 0 or self.path->at(self.currentIdx).oclIsTypeOf(Receptacle) or self.path->at(self.currentIdx).oclIsTypeOf(Entrepot)
+
+-- Au moins un réceptacle voisin de l’entrepôt 
+context Noeud inv hasReceptacleNeigh:
+	self.oclIsTypeOf(Entrepot) = false or self.oclIsTypeOf(Entrepot) and self.neighbours->exists(n:Noeud | n.oclIsTypeOf(Receptacle))
+	-- or self.neighbours->exists(self.oclIsTypeOf(Receptacle))
 
 
--- Un réceptacle est un conteneur de capacité RCAP
 
+-- #### Pré-post conditions pour les opérations de Drone
 
--- Les produits d’une commande doivent être livrés par un drone depuis l’entrepôt jusqu’au réceptacle.
-
-
--- A un moment donné, au plus un drone peut interagir avec un réceptacle.
-
-
--- Il existe au moins un réceptacle voisin de l’entrepôt.
-
-
--- Pour chaque réceptacle, il existe un chemin partant de l’entrepôt et menant à ce réceptacle en passant par un ensemble d’autres réceptacles tel que 
-
-
--- la distance entre tout couple d’éléments consécutifs de ce chemin soit inférieure ou égale à 2.
-
-
--- A un moment donné, il y a au plus un drone à chaque intersection de la grille.
-
-
--- Au niveau d’un réceptacle les actions de livrer les produits et de recharger la batterie ne peuvent pas avoir lieu en même temps.
-
-
--- L
 
 context Receptacle::livrer(co:Commande) : Integer
 	pre: self.load + co.load < self.cap
@@ -311,3 +314,7 @@ context Drone::deplacer(): Integer
 		and self.energy > 0
 	post: self.currentIdx > self.currentIdx@pre
 		and self.energy = self.energy@pre -1
+
+-- Pour chaque unité de temps, au moins une unité d'énergie est consommée
+context Manager::doHop()
+	post: Drone.allInstances()->exists(d:Drone | d.energy <> d.energy@pre)
