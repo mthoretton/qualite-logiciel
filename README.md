@@ -6,11 +6,13 @@ Projet 4IF de qualité logicel
 ## Installation de SPIN
 
 - [Lien téléchargement](http://spinroot.com/spin/Man/README.html#S2)
-- Décompresser la cible : tar -zxf \*.tar.gz
+- Décompresser la cible : `tar -zxf \*.tar.gz`
 - Aller dans le dossier décompressé : `cd Spin`
 - Aller dans les sources : `cd Src*`
 - Pour la compilation, il faut avoir le paquet `bison` installé : `sudo apt-get install bison`
 - Compiler : `make`
+- Rajouter le programme spin dans les programmes utilisateurs (pour y accéder depuis n'importe où) : `sudo ln -s PATH_ABSOLU_VERS_DOSSIER_SRC/spin /usr/local/bin/`
+- Tester en tapant : `spin -V` --> affiche la version de spin
 
 ## Tester un programme concurrent
 
